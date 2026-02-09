@@ -15,6 +15,7 @@ import { databaseService } from '../services/database';
 import { tripService } from '../services/tripService';
 import { placeService } from '../services/placeService';
 import { APP_NAME } from '../constants';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -65,8 +66,9 @@ export default function SettingsScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ScreenWrapper>
+      <View style={styles.container}>
+        <Appbar.Header>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Настройки" />
       </Appbar.Header>
@@ -211,14 +213,14 @@ export default function SettingsScreen() {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-    </View>
+      </View>
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   scrollView: {
     flex: 1,

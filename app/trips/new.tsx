@@ -19,6 +19,7 @@ import { tripPlaceService } from '../../services/tripPlaceService';
 import { Place } from '../../types';
 import { validateTrip } from '../../utils/validation';
 import { handleError, showError } from '../../utils/errorHandler';
+import ScreenWrapper from '../../components/ScreenWrapper';
 
 export default function NewTripScreen() {
   const router = useRouter();
@@ -110,8 +111,9 @@ export default function NewTripScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ScreenWrapper>
+      <View style={styles.container}>
+        <Appbar.Header>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Новая поездка" />
       </Appbar.Header>
@@ -221,35 +223,6 @@ export default function NewTripScreen() {
         </Button>
       </ScrollView>
 
-      {/* Date Pickers */}
-      {showStartDatePicker && (
-        <DateTimePicker
-          value={startDate || new Date()}
-          mode="date"
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          onChange={(event, selectedDate) => {
-            setShowStartDatePicker(Platform.OS === 'ios');
-            if (selectedDate) {
-              setStartDate(selectedDate);
-            }
-          }}
-        />
-      )}
-
-      {showEndDatePicker && (
-        <DateTimePicker
-          value={endDate || new Date()}
-          mode="date"
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          onChange={(event, selectedDate) => {
-            setShowEndDatePicker(Platform.OS === 'ios');
-            if (selectedDate) {
-              setEndDate(selectedDate);
-            }
-          }}
-        />
-      )}
-
       {/* Place Picker Dialog */}
       <Portal>
         <Dialog
@@ -289,14 +262,14 @@ export default function NewTripScreen() {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-    </View>
+      </View>
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   scrollView: {
     flex: 1,

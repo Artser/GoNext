@@ -19,6 +19,7 @@ import { tripPlaceService } from '../../../services/tripPlaceService';
 import { Trip, Place } from '../../../types';
 import { validateTrip } from '../../../utils/validation';
 import { handleError, showError } from '../../../utils/errorHandler';
+import ScreenWrapper from '../../../components/ScreenWrapper';
 
 export default function EditTripScreen() {
   const router = useRouter();
@@ -176,8 +177,9 @@ export default function EditTripScreen() {
   const selectedPlaces = availablePlaces.filter((p) => tripPlaceIds.includes(p.id));
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ScreenWrapper>
+      <View style={styles.container}>
+        <Appbar.Header>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Редактирование поездки" />
       </Appbar.Header>
@@ -283,6 +285,7 @@ export default function EditTripScreen() {
           Сохранить изменения
         </Button>
       </ScrollView>
+      </View>
 
       {/* Place Picker Dialog */}
       <Portal>
@@ -323,14 +326,13 @@ export default function EditTripScreen() {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-    </View>
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   scrollView: {
     flex: 1,

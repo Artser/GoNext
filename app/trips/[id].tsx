@@ -18,6 +18,7 @@ import { tripPlaceService } from '../../services/tripPlaceService';
 import { Trip, TripPlace, Place } from '../../types';
 import { handleError, showError } from '../../utils/errorHandler';
 import * as Linking from 'expo-linking';
+import ScreenWrapper from '../../components/ScreenWrapper';
 
 type ViewMode = 'plan' | 'diary';
 
@@ -156,35 +157,40 @@ export default function TripDetailScreen() {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <Appbar.Header>
-          <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Загрузка..." />
-        </Appbar.Header>
-        <View style={styles.centerContent}>
-          <Text>Загрузка...</Text>
+      <ScreenWrapper>
+        <View style={styles.container}>
+          <Appbar.Header>
+            <Appbar.BackAction onPress={() => router.back()} />
+            <Appbar.Content title="Загрузка..." />
+          </Appbar.Header>
+          <View style={styles.centerContent}>
+            <Text>Загрузка...</Text>
+          </View>
         </View>
-      </View>
+      </ScreenWrapper>
     );
   }
 
   if (!trip) {
     return (
-      <View style={styles.container}>
-        <Appbar.Header>
-          <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Поездка не найдена" />
-        </Appbar.Header>
-        <View style={styles.centerContent}>
-          <Text>Поездка не найдена</Text>
+      <ScreenWrapper>
+        <View style={styles.container}>
+          <Appbar.Header>
+            <Appbar.BackAction onPress={() => router.back()} />
+            <Appbar.Content title="Поездка не найдена" />
+          </Appbar.Header>
+          <View style={styles.centerContent}>
+            <Text>Поездка не найдена</Text>
+          </View>
         </View>
-      </View>
+      </ScreenWrapper>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ScreenWrapper>
+      <View style={styles.container}>
+        <Appbar.Header>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title={trip.title} />
         <Appbar.Action icon="pencil" onPress={handleEdit} />
@@ -267,7 +273,7 @@ export default function TripDetailScreen() {
           displayedPlaces.map((tripPlace) => {
             const originalIndex = tripPlaces.findIndex((tp) => tp.id === tripPlace.id);
             return (
-            <Card key={tripPlace.id} style={styles.placeCard}>
+              <Card key={tripPlace.id} style={styles.placeCard}>
               <Card.Content>
                 <View style={styles.placeHeader}>
                   <View style={styles.placeNumber}>
@@ -363,7 +369,7 @@ export default function TripDetailScreen() {
                   )}
                 </View>
               </Card.Content>
-            </Card>
+              </Card>
             );
           })
         )}
@@ -398,14 +404,14 @@ export default function TripDetailScreen() {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-    </View>
+      </View>
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   scrollView: {
     flex: 1,

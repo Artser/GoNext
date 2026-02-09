@@ -14,9 +14,14 @@ import { validatePlace } from '../../utils/validation';
 import { handleError, showError } from '../../utils/errorHandler';
 import * as Location from 'expo-location';
 import * as Linking from 'expo-linking';
+import ScreenWrapper from '../../components/ScreenWrapper';
 
 export default function NewPlaceScreen() {
   const router = useRouter();
+  const { selectedLat, selectedLon } = useLocalSearchParams<{
+    selectedLat?: string;
+    selectedLon?: string;
+  }>();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [visitlater, setVisitlater] = useState(false);
@@ -25,10 +30,10 @@ export default function NewPlaceScreen() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (params.selectedLat && params.selectedLon) {
-      setCoordinates(`${params.selectedLat},${params.selectedLon}`);
+    if (selectedLat && selectedLon) {
+      setCoordinates(`${selectedLat},${selectedLon}`);
     }
-  }, [params.selectedLat, params.selectedLon]);
+  }, [selectedLat, selectedLon]);
 
   const handleGetCurrentLocation = async () => {
     try {
@@ -80,8 +85,9 @@ export default function NewPlaceScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ScreenWrapper>
+      <View style={styles.container}>
+        <Appbar.Header>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Новое место" />
       </Appbar.Header>
@@ -180,14 +186,14 @@ export default function NewPlaceScreen() {
           Сохранить место
         </Button>
       </ScrollView>
-    </View>
+      </View>
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   scrollView: {
     flex: 1,

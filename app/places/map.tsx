@@ -4,6 +4,7 @@ import { Appbar, Button } from 'react-native-paper';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import MapView from '../../components/MapView';
 import * as Location from 'expo-location';
+import ScreenWrapper from '../../components/ScreenWrapper';
 
 export default function PlaceMapScreen() {
   const router = useRouter();
@@ -52,39 +53,40 @@ export default function PlaceMapScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
-        <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title={isEditable ? 'Выбор координат' : 'Карта'} />
-        {isEditable && (
-          <Appbar.Action icon="crosshairs-gps" onPress={handleGetCurrentLocation} />
-        )}
-      </Appbar.Header>
+    <ScreenWrapper>
+      <View style={styles.container}>
+        <Appbar.Header>
+          <Appbar.BackAction onPress={() => router.back()} />
+          <Appbar.Content title={isEditable ? 'Выбор координат' : 'Карта'} />
+          {isEditable && (
+            <Appbar.Action icon="crosshairs-gps" onPress={handleGetCurrentLocation} />
+          )}
+        </Appbar.Header>
 
-      <View style={styles.content}>
-        <MapView
-          latitude={selectedLat}
-          longitude={selectedLon}
-          onCoordinateSelect={handleCoordinateSelect}
-          editable={isEditable}
-        />
+        <View style={styles.content}>
+          <MapView
+            latitude={selectedLat}
+            longitude={selectedLon}
+            onCoordinateSelect={handleCoordinateSelect}
+            editable={isEditable}
+          />
 
-        {isEditable && (
-          <View style={styles.footer}>
-            <Button mode="contained" onPress={handleSave} style={styles.saveButton}>
-              Использовать координаты: {selectedLat.toFixed(6)}, {selectedLon.toFixed(6)}
-            </Button>
-          </View>
-        )}
+          {isEditable && (
+            <View style={styles.footer}>
+              <Button mode="contained" onPress={handleSave} style={styles.saveButton}>
+                Использовать координаты: {selectedLat.toFixed(6)}, {selectedLon.toFixed(6)}
+              </Button>
+            </View>
+          )}
+        </View>
       </View>
-    </View>
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   content: {
     flex: 1,

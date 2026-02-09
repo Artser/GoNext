@@ -12,6 +12,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { placeService } from '../../../services/placeService';
 import { Place } from '../../../types';
 import * as Location from 'expo-location';
+import ScreenWrapper from '../../../components/ScreenWrapper';
 
 export default function EditPlaceScreen() {
   const router = useRouter();
@@ -115,38 +116,43 @@ export default function EditPlaceScreen() {
 
   if (loadingPlace) {
     return (
-      <View style={styles.container}>
-        <Appbar.Header>
-          <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Загрузка..." />
-        </Appbar.Header>
-        <View style={styles.centerContent}>
-          <Text>Загрузка...</Text>
+      <ScreenWrapper>
+        <View style={styles.container}>
+          <Appbar.Header>
+            <Appbar.BackAction onPress={() => router.back()} />
+            <Appbar.Content title="Загрузка..." />
+          </Appbar.Header>
+          <View style={styles.centerContent}>
+            <Text>Загрузка...</Text>
+          </View>
         </View>
-      </View>
+      </ScreenWrapper>
     );
   }
 
   if (!place) {
     return (
-      <View style={styles.container}>
-        <Appbar.Header>
-          <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Место не найдено" />
-        </Appbar.Header>
-        <View style={styles.centerContent}>
-          <Text>Место не найдено</Text>
+      <ScreenWrapper>
+        <View style={styles.container}>
+          <Appbar.Header>
+            <Appbar.BackAction onPress={() => router.back()} />
+            <Appbar.Content title="Место не найдено" />
+          </Appbar.Header>
+          <View style={styles.centerContent}>
+            <Text>Место не найдено</Text>
+          </View>
         </View>
-      </View>
+      </ScreenWrapper>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
-        <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title="Редактирование места" />
-      </Appbar.Header>
+    <ScreenWrapper>
+      <View style={styles.container}>
+        <Appbar.Header>
+          <Appbar.BackAction onPress={() => router.back()} />
+          <Appbar.Content title="Редактирование места" />
+        </Appbar.Header>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
         <Card style={styles.card}>
@@ -242,14 +248,14 @@ export default function EditPlaceScreen() {
           Сохранить изменения
         </Button>
       </ScrollView>
-    </View>
+      </View>
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   scrollView: {
     flex: 1,

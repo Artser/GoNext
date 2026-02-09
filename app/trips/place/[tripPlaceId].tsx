@@ -19,6 +19,7 @@ import PhotoGallery from '../../../components/PhotoGallery';
 import PhotoPicker from '../../../components/PhotoPicker';
 import { handleError, showError } from '../../../utils/errorHandler';
 import * as Linking from 'expo-linking';
+import ScreenWrapper from '../../../components/ScreenWrapper';
 
 export default function TripPlaceDetailScreen() {
   const router = useRouter();
@@ -149,35 +150,40 @@ export default function TripPlaceDetailScreen() {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <Appbar.Header>
-          <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Загрузка..." />
-        </Appbar.Header>
-        <View style={styles.centerContent}>
-          <Text>Загрузка...</Text>
+      <ScreenWrapper>
+        <View style={styles.container}>
+          <Appbar.Header>
+            <Appbar.BackAction onPress={() => router.back()} />
+            <Appbar.Content title="Загрузка..." />
+          </Appbar.Header>
+          <View style={styles.centerContent}>
+            <Text>Загрузка...</Text>
+          </View>
         </View>
-      </View>
+      </ScreenWrapper>
     );
   }
 
   if (!tripPlace) {
     return (
-      <View style={styles.container}>
-        <Appbar.Header>
-          <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Место не найдено" />
-        </Appbar.Header>
-        <View style={styles.centerContent}>
-          <Text>Место не найдено</Text>
+      <ScreenWrapper>
+        <View style={styles.container}>
+          <Appbar.Header>
+            <Appbar.BackAction onPress={() => router.back()} />
+            <Appbar.Content title="Место не найдено" />
+          </Appbar.Header>
+          <View style={styles.centerContent}>
+            <Text>Место не найдено</Text>
+          </View>
         </View>
-      </View>
+      </ScreenWrapper>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ScreenWrapper>
+      <View style={styles.container}>
+        <Appbar.Header>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title={tripPlace.place.name} />
       </Appbar.Header>
@@ -290,14 +296,14 @@ export default function TripPlaceDetailScreen() {
           Сохранить
         </Button>
       </ScrollView>
-    </View>
+      </View>
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   scrollView: {
     flex: 1,

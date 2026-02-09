@@ -5,6 +5,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import MapView from '../../components/MapView';
 import { tripPlaceService } from '../../services/tripPlaceService';
 import { TripPlace, Place } from '../../types';
+import ScreenWrapper from '../../components/ScreenWrapper';
 
 export default function TripMapScreen() {
   const router = useRouter();
@@ -91,7 +92,6 @@ export default function TripMapScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   content: {
     flex: 1,

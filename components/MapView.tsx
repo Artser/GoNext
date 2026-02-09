@@ -1,8 +1,17 @@
 import { useState, useEffect } from 'react';
 import { View, StyleSheet, Platform, Linking } from 'react-native';
-import { WebView } from 'react-native-webview';
 import { Button, Card, Text, ActivityIndicator } from 'react-native-paper';
 import * as Location from 'expo-location';
+
+// Условный импорт WebView только для мобильных платформ
+let WebView: any = null;
+if (Platform.OS !== 'web') {
+  try {
+    WebView = require('react-native-webview').WebView;
+  } catch (e) {
+    console.warn('Не удалось загрузить react-native-webview:', e);
+  }
+}
 
 interface MapViewProps {
   latitude: number;
@@ -167,6 +176,69 @@ export default function MapView({
       console.error('Ошибка открытия карты:', err);
     });
   };
+
+  // На веб-платформе используем iframe
+  if (Platform.OS === 'web') {
+    const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${longitude - 0.01},${latitude - 0.01},${longitude + 0.01},${latitude + 0.01}&layer=mapnik&marker=${latitude},${longitude}`;
+    
+    return (
+      <View style={styles.container}>
+        <Card style={styles.card}>
+          <Card.Content style={styles.cardContent}>
+            <View style={styles.mapContainer}>
+              <iframe
+                src={mapUrl}
+                style={{ width: '100%', height: '100%', border: 'none' }}
+                title="Карта"
+              />
+            </View>
+            <View style={styles.actions}>
+              <Button 
+                mode="outlined" 
+                icon="map" 
+                onPress={() => {
+                  const url = `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}&zoom=15`;
+                  window.open(url, '_blank');
+                }}
+              >
+                Открыть в OpenStreetMap
+              </Button>
+              {editable && (
+                <Text variant="bodySmall" style={styles.hint}>
+                  На веб-платформе выбор координат на карте недоступен. Используйте мобильное приложение для полной функциональности.
+                </Text>
+              )}
+            </View>
+          </Card.Content>
+        </Card>
+      </View>
+    );
+  }
+
+  // На мобильных платформах используем WebView
+  if (!WebView) {
+    return (
+      <View style={styles.container}>
+        <Card style={styles.card}>
+          <Card.Content style={styles.cardContent}>
+            <View style={styles.mapContainer}>
+              <View style={styles.loadingOverlay}>
+                <Text variant="bodyLarge">WebView недоступен</Text>
+                <Button 
+                  mode="contained" 
+                  icon="map" 
+                  onPress={handleOpenInMaps}
+                  style={{ marginTop: 16 }}
+                >
+                  Открыть в картах
+                </Button>
+              </View>
+            </View>
+          </Card.Content>
+        </Card>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

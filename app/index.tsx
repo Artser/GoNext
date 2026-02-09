@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { tripService } from '../services/tripService';
 import { placeService } from '../services/placeService';
 import { tripPlaceService } from '../services/tripPlaceService';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -47,8 +48,9 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ScreenWrapper>
+      <View style={styles.container}>
+        <Appbar.Header>
         <Appbar.Content title="GoNext" />
       </Appbar.Header>
 
@@ -200,14 +202,14 @@ export default function HomeScreen() {
           </Card.Content>
         </Card>
       </ScrollView>
-    </View>
+      </View>
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   scrollView: {
     flex: 1,

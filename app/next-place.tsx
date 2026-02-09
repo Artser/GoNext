@@ -16,6 +16,7 @@ import { Trip, TripPlace, Place } from '../types';
 import { handleError, showError } from '../utils/errorHandler';
 import * as Location from 'expo-location';
 import * as Linking from 'expo-linking';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 export default function NextPlaceScreen() {
   const router = useRouter();
@@ -172,105 +173,112 @@ export default function NextPlaceScreen() {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <Appbar.Header>
-          <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Следующее место" />
-        </Appbar.Header>
-        <View style={styles.centerContent}>
-          <Text variant="bodyLarge">Загрузка...</Text>
+      <ScreenWrapper>
+        <View style={styles.container}>
+          <Appbar.Header>
+            <Appbar.BackAction onPress={() => router.back()} />
+            <Appbar.Content title="Следующее место" />
+          </Appbar.Header>
+          <View style={styles.centerContent}>
+            <Text variant="bodyLarge">Загрузка...</Text>
+          </View>
         </View>
-      </View>
+      </ScreenWrapper>
     );
   }
 
   // Нет активной поездки
   if (!currentTrip) {
     return (
-      <View style={styles.container}>
-        <Appbar.Header>
-          <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Следующее место" />
-        </Appbar.Header>
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
-          <Card style={styles.card}>
-            <Card.Content>
-              <Text variant="headlineSmall" style={styles.emptyTitle}>
-                Нет активной поездки
-              </Text>
-              <Text variant="bodyLarge" style={styles.emptyText}>
-                Создайте поездку и отметьте её как текущую, чтобы увидеть следующее место.
-              </Text>
-              <Button
-                mode="contained"
-                onPress={() => router.push('/trips/new')}
-                style={styles.actionButton}
-              >
-                Создать поездку
-              </Button>
-            </Card.Content>
-          </Card>
-        </ScrollView>
-      </View>
+      <ScreenWrapper>
+        <View style={styles.container}>
+          <Appbar.Header>
+            <Appbar.BackAction onPress={() => router.back()} />
+            <Appbar.Content title="Следующее место" />
+          </Appbar.Header>
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
+            <Card style={styles.card}>
+              <Card.Content>
+                <Text variant="headlineSmall" style={styles.emptyTitle}>
+                  Нет активной поездки
+                </Text>
+                <Text variant="bodyLarge" style={styles.emptyText}>
+                  Создайте поездку и отметьте её как текущую, чтобы увидеть следующее место.
+                </Text>
+                <Button
+                  mode="contained"
+                  onPress={() => router.push('/trips/new')}
+                  style={styles.actionButton}
+                >
+                  Создать поездку
+                </Button>
+              </Card.Content>
+            </Card>
+          </ScrollView>
+        </View>
+      </ScreenWrapper>
     );
   }
 
   // Все места посещены
   if (!nextPlace) {
     return (
-      <View style={styles.container}>
-        <Appbar.Header>
-          <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Следующее место" />
-          <Appbar.Action icon="refresh" onPress={onRefresh} />
-        </Appbar.Header>
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
-          <Card style={styles.card}>
-            <Card.Content>
-              <Text variant="headlineSmall" style={styles.emptyTitle}>
-                🎉 Все места посещены!
-              </Text>
-              <Text variant="bodyLarge" style={styles.emptyText}>
-                Поздравляем! Вы посетили все места в поездке "{currentTrip.title}".
-              </Text>
-              {totalCount > 0 && (
-                <View style={styles.progressContainer}>
-                  <Text variant="bodyMedium" style={styles.progressLabel}>
-                    Прогресс: {visitedCount} из {totalCount} мест
-                  </Text>
-                  <ProgressBar progress={1} color="#4caf50" style={styles.progressBar} />
-                </View>
-              )}
-              <Button
-                mode="contained"
-                onPress={handleOpenTripDetail}
-                style={styles.actionButton}
-              >
-                Посмотреть поездку
-              </Button>
-            </Card.Content>
-          </Card>
-        </ScrollView>
-      </View>
+      <ScreenWrapper>
+        <View style={styles.container}>
+          <Appbar.Header>
+            <Appbar.BackAction onPress={() => router.back()} />
+            <Appbar.Content title="Следующее место" />
+            <Appbar.Action icon="refresh" onPress={onRefresh} />
+          </Appbar.Header>
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
+            <Card style={styles.card}>
+              <Card.Content>
+                <Text variant="headlineSmall" style={styles.emptyTitle}>
+                  🎉 Все места посещены!
+                </Text>
+                <Text variant="bodyLarge" style={styles.emptyText}>
+                  Поздравляем! Вы посетили все места в поездке "{currentTrip.title}".
+                </Text>
+                {totalCount > 0 && (
+                  <View style={styles.progressContainer}>
+                    <Text variant="bodyMedium" style={styles.progressLabel}>
+                      Прогресс: {visitedCount} из {totalCount} мест
+                    </Text>
+                    <ProgressBar progress={1} color="#4caf50" style={styles.progressBar} />
+                  </View>
+                )}
+                <Button
+                  mode="contained"
+                  onPress={handleOpenTripDetail}
+                  style={styles.actionButton}
+                >
+                  Посмотреть поездку
+                </Button>
+              </Card.Content>
+            </Card>
+          </ScrollView>
+        </View>
+      </ScreenWrapper>
     );
   }
 
   // Есть следующее место
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ScreenWrapper>
+      <View style={styles.container}>
+        <Appbar.Header>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Следующее место" />
         <Appbar.Action icon="refresh" onPress={onRefresh} />
@@ -403,14 +411,14 @@ export default function NextPlaceScreen() {
           </Button>
         </View>
       </ScrollView>
-    </View>
+      </View>
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   scrollView: {
     flex: 1,

@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { tripService } from '../../services/tripService';
 import { tripPlaceService } from '../../services/tripPlaceService';
 import { Trip } from '../../types';
+import ScreenWrapper from '../../components/ScreenWrapper';
 
 interface TripWithStats extends Trip {
   placesCount: number;
@@ -135,12 +136,13 @@ export default function TripsScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
-        <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title="Поездки" />
-        <Appbar.Action icon="plus" onPress={() => router.push('/trips/new')} />
-      </Appbar.Header>
+    <ScreenWrapper>
+      <View style={styles.container}>
+        <Appbar.Header>
+          <Appbar.BackAction onPress={() => router.back()} />
+          <Appbar.Content title="Поездки" />
+          <Appbar.Action icon="plus" onPress={() => router.push('/trips/new')} />
+        </Appbar.Header>
 
       <View style={styles.content}>
         {loading && trips.length === 0 ? (
@@ -169,14 +171,14 @@ export default function TripsScreen() {
         style={styles.fab}
         onPress={() => router.push('/trips/new')}
       />
-    </View>
+      </View>
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   content: {
     flex: 1,

@@ -4,6 +4,7 @@ import { Appbar, Searchbar, Chip, Card, Text, FAB, IconButton } from 'react-nati
 import { useRouter } from 'expo-router';
 import { placeService } from '../../services/placeService';
 import { Place } from '../../types';
+import ScreenWrapper from '../../components/ScreenWrapper';
 
 type FilterType = 'all' | 'visitlater' | 'liked';
 
@@ -105,8 +106,9 @@ export default function PlacesScreen() {
   );
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ScreenWrapper>
+      <View style={styles.container}>
+        <Appbar.Header>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Места" />
         <Appbar.Action icon="plus" onPress={() => router.push('/places/new')} />
@@ -176,14 +178,14 @@ export default function PlacesScreen() {
         style={styles.fab}
         onPress={() => router.push('/places/new')}
       />
-    </View>
+      </View>
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   content: {
     flex: 1,
