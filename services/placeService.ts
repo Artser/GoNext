@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { databaseService } from './database';
 import { Place, DatabasePlace } from '../types';
 import { booleanToInt, intToBoolean, generateId, getCurrentDate } from '../utils/database';
@@ -6,6 +7,7 @@ import { booleanToInt, intToBoolean, generateId, getCurrentDate } from '../utils
  * Сервис для работы с местами (CRUD операции)
  */
 class PlaceService {
+  private isWeb = Platform.OS === 'web';
   /**
    * Создание нового места
    */
@@ -56,6 +58,10 @@ class PlaceService {
    * Получение всех мест
    */
   async getAllPlaces(): Promise<Place[]> {
+    if (this.isWeb) {
+      return []; // На веб-платформе возвращаем пустой массив
+    }
+
     const db = databaseService.getDatabase();
     const results = await db.getAllAsync<DatabasePlace>(
       'SELECT * FROM places ORDER BY createdAt DESC'

@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { databaseService } from './database';
 import { Trip, DatabaseTrip } from '../types';
 import { booleanToInt, intToBoolean, generateId, getCurrentDate } from '../utils/database';
@@ -6,6 +7,7 @@ import { booleanToInt, intToBoolean, generateId, getCurrentDate } from '../utils
  * Сервис для работы с поездками (CRUD операции)
  */
 class TripService {
+  private isWeb = Platform.OS === 'web';
   /**
    * Создание новой поездки
    */
@@ -61,6 +63,10 @@ class TripService {
    * Получение всех поездок
    */
   async getAllTrips(): Promise<Trip[]> {
+    if (this.isWeb) {
+      return []; // На веб-платформе возвращаем пустой массив
+    }
+
     const db = databaseService.getDatabase();
     const results = await db.getAllAsync<DatabaseTrip>(
       'SELECT * FROM trips ORDER BY createdAt DESC'
@@ -73,6 +79,10 @@ class TripService {
    * Получение текущей поездки
    */
   async getCurrentTrip(): Promise<Trip | null> {
+    if (this.isWeb) {
+      return null; // На веб-платформе возвращаем null
+    }
+
     const db = databaseService.getDatabase();
     const result = await db.getFirstAsync<DatabaseTrip>(
       'SELECT * FROM trips WHERE current = 1 LIMIT 1'

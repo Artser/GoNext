@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { Appbar, Button, Card, Text, Chip, Divider } from 'react-native-paper';
+import { View, StyleSheet, ScrollView, Platform } from 'react-native';
+import { Appbar, Button, Card, Text, Chip, Divider, Banner } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { tripService } from '../services/tripService';
 import { placeService } from '../services/placeService';
@@ -53,6 +53,17 @@ export default function HomeScreen() {
       </Appbar.Header>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+        {Platform.OS === 'web' && (
+          <Banner
+            visible={true}
+            actions={[]}
+            icon="information"
+            style={styles.banner}
+          >
+            Веб-версия имеет ограниченную функциональность. Для полной работы используйте мобильное приложение (Android/iOS).
+          </Banner>
+        )}
+
         <Card style={styles.welcomeCard}>
           <Card.Content>
             <Text variant="headlineSmall" style={styles.title}>
@@ -203,6 +214,9 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
+  },
+  banner: {
+    marginBottom: 20,
   },
   welcomeCard: {
     marginBottom: 20,

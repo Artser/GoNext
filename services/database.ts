@@ -1,16 +1,47 @@
-import * as SQLite from 'expo-sqlite';
+import { Platform } from 'react-native';
 import { DATABASE_NAME, DATABASE_VERSION } from '../constants';
 
 /**
  * Сервис для работы с SQLite базой данных
  */
 class DatabaseService {
-  private db: SQLite.SQLiteDatabase | null = null;
+  private db: any = null;
+  private isWeb = Platform.OS === 'web';
+  private SQLite: any = null;
+
+  /**
+   * Получение модуля SQLite (ленивая загрузка)
+   */
+  private getSQLiteModule(): any {
+    if (this.isWeb) {
+      return null;
+    }
+    if (!this.SQLite) {
+      try {
+        this.SQLite = require('expo-sqlite');
+      } catch (e) {
+        console.warn('Не удалось загрузить expo-sqlite:', e);
+        return null;
+      }
+    }
+    return this.SQLite;
+  }
 
   /**
    * Инициализация базы данных
    */
   async initialize(): Promise<void> {
+    // SQLite не поддерживается на веб-платформе
+    if (this.isWeb) {
+      console.warn('SQLite не поддерживается на веб-платформе. Приложение работает только на мобильных устройствах.');
+      return;
+    }
+
+    const SQLite = this.getSQLiteModule();
+    if (!SQLite) {
+      throw new Error('SQLite модуль недоступен');
+    }
+
     try {
       this.db = await SQLite.openDatabaseAsync(DATABASE_NAME);
       await this.createTables();
@@ -23,7 +54,10 @@ class DatabaseService {
   /**
    * Получение экземпляра базы данных
    */
-  getDatabase(): SQLite.SQLiteDatabase {
+  getDatabase(): any {
+    if (this.isWeb || !this.getSQLiteModule()) {
+      throw new Error('База данных не поддерживается на веб-платформе. Используйте мобильное приложение.');
+    }
     if (!this.db) {
       throw new Error('База данных не инициализирована. Вызовите initialize() сначала.');
     }
@@ -107,10 +141,20 @@ class DatabaseService {
    * Закрытие соединения с базой данных
    */
   async close(): Promise<void> {
+    if (this.isWeb) {
+      return;
+    }
     if (this.db) {
       await this.db.closeAsync();
       this.db = null;
     }
+  }
+
+  /**
+   * Проверка, поддерживается ли база данных на текущей платформе
+   */
+  isSupported(): boolean {
+    return !this.isWeb;
   }
 }
 

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Platform } from 'react-native';
 import { Stack } from 'expo-router';
 import { PaperProvider } from 'react-native-paper';
 import { databaseService } from '../services/database';
@@ -9,9 +10,14 @@ export default function RootLayout() {
     // Инициализация базы данных и директории для фотографий при запуске приложения
     const initApp = async () => {
       try {
-        await databaseService.initialize();
-        await photoService.initializeDirectory();
-        console.log('Приложение инициализировано');
+        // SQLite работает только на мобильных платформах
+        if (Platform.OS !== 'web') {
+          await databaseService.initialize();
+          await photoService.initializeDirectory();
+          console.log('Приложение инициализировано');
+        } else {
+          console.warn('Веб-версия: SQLite не поддерживается. Используйте мобильное приложение для полной функциональности.');
+        }
       } catch (error) {
         console.error('Ошибка инициализации приложения:', error);
       }
@@ -21,7 +27,9 @@ export default function RootLayout() {
 
     // Очистка при размонтировании
     return () => {
-      databaseService.close().catch(console.error);
+      if (Platform.OS !== 'web') {
+        databaseService.close().catch(console.error);
+      }
     };
   }, []);
 

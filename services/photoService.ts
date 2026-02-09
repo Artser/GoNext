@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { databaseService } from './database';
 import { PlacePhoto, DatabasePlacePhoto } from '../types';
 import { generateId, getCurrentDate } from '../utils/database';
@@ -11,12 +12,21 @@ class PhotoService {
   /**
    * Директория для хранения фотографий
    */
-  private readonly photosDirectory = `${FileSystem.documentDirectory}photos/`;
+  private readonly photosDirectory = Platform.OS === 'web' 
+    ? 'photos/' 
+    : `${FileSystem.documentDirectory}photos/`;
+  private isWeb = Platform.OS === 'web';
 
   /**
    * Инициализация директории для фотографий
    */
   async initializeDirectory(): Promise<void> {
+    if (this.isWeb) {
+      // На веб-платформе файловая система не поддерживается
+      console.warn('Файловая система не поддерживается на веб-платформе');
+      return;
+    }
+
     const dirInfo = await FileSystem.getInfoAsync(this.photosDirectory);
     if (!dirInfo.exists) {
       await FileSystem.makeDirectoryAsync(this.photosDirectory, { intermediates: true });
@@ -27,6 +37,10 @@ class PhotoService {
    * Выбор фотографии из галереи или камеры
    */
   async pickImage(): Promise<string | null> {
+    if (this.isWeb) {
+      throw new Error('Выбор фотографий не поддерживается на веб-платформе');
+    }
+
     try {
       // Запрашиваем разрешения
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -67,6 +81,10 @@ class PhotoService {
    * Сделать фото камерой
    */
   async takePhoto(): Promise<string | null> {
+    if (this.isWeb) {
+      throw new Error('Камера не поддерживается на веб-платформе');
+    }
+
     try {
       // Запрашиваем разрешения
       const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -110,6 +128,10 @@ class PhotoService {
     filePath: string,
     tripPlaceId?: string
   ): Promise<PlacePhoto> {
+    if (this.isWeb) {
+      throw new Error('Добавление фотографий не поддерживается на веб-платформе');
+    }
+
     const db = databaseService.getDatabase();
     const id = generateId();
     const createdAt = getCurrentDate();
@@ -133,6 +155,10 @@ class PhotoService {
    * Получение всех фотографий места
    */
   async getPhotosByPlaceId(placeId: string): Promise<PlacePhoto[]> {
+    if (this.isWeb) {
+      return []; // На веб-платформе возвращаем пустой массив
+    }
+
     const db = databaseService.getDatabase();
     const results = await db.getAllAsync<DatabasePlacePhoto>(
       'SELECT * FROM place_photos WHERE placeId = ? ORDER BY createdAt DESC',
@@ -146,6 +172,10 @@ class PhotoService {
    * Получение фотографий места в поездке
    */
   async getPhotosByTripPlaceId(tripPlaceId: string): Promise<PlacePhoto[]> {
+    if (this.isWeb) {
+      return []; // На веб-платформе возвращаем пустой массив
+    }
+
     const db = databaseService.getDatabase();
     const results = await db.getAllAsync<DatabasePlacePhoto>(
       'SELECT * FROM place_photos WHERE tripPlaceId = ? ORDER BY createdAt DESC',
@@ -159,6 +189,10 @@ class PhotoService {
    * Удаление фотографии
    */
   async deletePhoto(id: string): Promise<void> {
+    if (this.isWeb) {
+      throw new Error('Удаление фотографий не поддерживается на веб-платформе');
+    }
+
     const db = databaseService.getDatabase();
 
     // Получаем информацию о фотографии

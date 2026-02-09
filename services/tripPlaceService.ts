@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { databaseService } from './database';
 import { TripPlace, DatabaseTripPlace, Place } from '../types';
 import { booleanToInt, intToBoolean, generateId, getCurrentDate } from '../utils/database';
@@ -7,6 +8,7 @@ import { placeService } from './placeService';
  * Сервис для работы с местами в поездках
  */
 class TripPlaceService {
+  private isWeb = Platform.OS === 'web';
   /**
    * Добавление места в поездку
    */
@@ -37,6 +39,10 @@ class TripPlaceService {
    * Получение всех мест в поездке
    */
   async getTripPlaces(tripId: string): Promise<(TripPlace & { place: Place })[]> {
+    if (this.isWeb) {
+      return []; // На веб-платформе возвращаем пустой массив
+    }
+
     const db = databaseService.getDatabase();
     const results = await db.getAllAsync<DatabaseTripPlace>(
       'SELECT * FROM trip_places WHERE tripId = ? ORDER BY order ASC',
@@ -163,6 +169,10 @@ class TripPlaceService {
    * Получение следующего непосещенного места в поездке
    */
   async getNextPlace(tripId: string): Promise<(TripPlace & { place: Place }) | null> {
+    if (this.isWeb) {
+      return null; // На веб-платформе возвращаем null
+    }
+
     const tripPlaces = await this.getTripPlaces(tripId);
     const nextPlace = tripPlaces.find((tp) => !tp.visited);
 
