@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, RefreshControl } from 'react-native';
-import { Appbar, Card, Text, FAB, Chip, ProgressBar } from 'react-native-paper';
+import { Appbar, Card, Text, FAB, Chip, ProgressBar, useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { tripService } from '../../services/tripService';
 import { tripPlaceService } from '../../services/tripPlaceService';
@@ -14,6 +14,7 @@ interface TripWithStats extends Trip {
 
 export default function TripsScreen() {
   const router = useRouter();
+  const theme = useTheme();
   const [trips, setTrips] = useState<TripWithStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -124,7 +125,7 @@ export default function TripsScreen() {
 
           {item.placesCount > 0 && (
             <View style={styles.progressContainer}>
-              <ProgressBar progress={progress} color="#6200ee" style={styles.progressBar} />
+                <ProgressBar progress={progress} color={theme.colors.primary} style={styles.progressBar} />
               <Text variant="bodySmall" style={styles.progressText}>
                 {Math.round(progress * 100)}%
               </Text>

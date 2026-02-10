@@ -11,6 +11,7 @@ import {
   Portal,
   Dialog,
   Divider,
+  useTheme,
 } from 'react-native-paper';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { tripService } from '../../services/tripService';
@@ -24,6 +25,7 @@ type ViewMode = 'plan' | 'diary';
 
 export default function TripDetailScreen() {
   const router = useRouter();
+  const theme = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const [trip, setTrip] = useState<Trip | null>(null);
   const [tripPlaces, setTripPlaces] = useState<(TripPlace & { place: Place })[]>([]);
@@ -232,7 +234,7 @@ export default function TripDetailScreen() {
                     Прогресс: {visitedCount} из {totalCount} мест
                   </Text>
                   <View style={styles.progressBarContainer}>
-                    <View style={[styles.progressBar, { width: `${progress * 100}%` }]} />
+                    <View style={[styles.progressBar, { width: `${progress * 100}%`, backgroundColor: theme.colors.primary }]} />
                   </View>
                 </View>
               </>
@@ -276,7 +278,7 @@ export default function TripDetailScreen() {
               <Card key={tripPlace.id} style={styles.placeCard}>
               <Card.Content>
                 <View style={styles.placeHeader}>
-                  <View style={styles.placeNumber}>
+                  <View style={[styles.placeNumber, { backgroundColor: theme.colors.primary }]}>
                     <Text variant="titleMedium" style={styles.placeNumberText}>
                       {tripPlace.order}
                     </Text>
@@ -463,7 +465,6 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: '100%',
-    backgroundColor: '#6200ee',
   },
   viewModeContainer: {
     marginBottom: 16,
@@ -479,7 +480,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#6200ee',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,

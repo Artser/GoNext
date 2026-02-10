@@ -1,5 +1,6 @@
 import React from 'react';
 import { ImageBackground, StyleSheet, View, ViewStyle } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
 interface ScreenWrapperProps {
   children: React.ReactNode;
@@ -10,6 +11,20 @@ interface ScreenWrapperProps {
  * Компонент-обертка для экранов с фоновым изображением
  */
 export default function ScreenWrapper({ children, style }: ScreenWrapperProps) {
+  const theme = useTheme();
+  // Используем тему из PaperProvider для определения темной темы
+  const isDark = theme.dark;
+
+  // В темной теме не показываем фоновое изображение
+  if (isDark) {
+    return (
+      <View style={[styles.container, style]}>
+        {children}
+      </View>
+    );
+  }
+
+  // В светлой теме показываем фоновое изображение
   return (
     <ImageBackground
       source={require('../assets/backgrounds/gonext-bg.png')}
@@ -24,6 +39,11 @@ export default function ScreenWrapper({ children, style }: ScreenWrapperProps) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   background: {
     flex: 1,
     width: '100%',

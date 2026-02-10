@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Platform } from 'react-native';
-import { Appbar, Button, Card, Text, Chip, Divider, Banner } from 'react-native-paper';
+import { Appbar, Button, Card, Text, Chip, Divider, Banner, useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { tripService } from '../services/tripService';
 import { placeService } from '../services/placeService';
 import { tripPlaceService } from '../services/tripPlaceService';
@@ -9,6 +10,8 @@ import ScreenWrapper from '../components/ScreenWrapper';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { t } = useTranslation();
+  const theme = useTheme();
   const [stats, setStats] = useState({
     placesCount: 0,
     tripsCount: 0,
@@ -51,7 +54,7 @@ export default function HomeScreen() {
     <ScreenWrapper>
       <View style={styles.container}>
         <Appbar.Header>
-        <Appbar.Content title="GoNext" />
+        <Appbar.Content title={t('app.name')} />
       </Appbar.Header>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
@@ -62,17 +65,17 @@ export default function HomeScreen() {
             icon="information"
             style={styles.banner}
           >
-            Веб-версия имеет ограниченную функциональность. Для полной работы используйте мобильное приложение (Android/iOS).
+            {t('home.webWarning')}
           </Banner>
         )}
 
-        <Card style={styles.welcomeCard}>
+        <Card style={[styles.welcomeCard, { backgroundColor: theme.colors.primary }]}>
           <Card.Content>
             <Text variant="headlineSmall" style={styles.title}>
-              Дневник туриста
+              {t('app.title')}
             </Text>
             <Text variant="bodyMedium" style={styles.subtitle}>
-              Планируйте поездки и ведите дневник путешествий
+              {t('app.subtitle')}
             </Text>
           </Card.Content>
         </Card>
@@ -81,24 +84,24 @@ export default function HomeScreen() {
         <Card style={styles.card}>
           <Card.Content>
             <Text variant="titleMedium" style={styles.sectionTitle}>
-              Статистика
+              {t('home.statistics')}
             </Text>
             <View style={styles.statsRow}>
               <View style={styles.statItem}>
-                <Text variant="headlineMedium" style={styles.statNumber}>
+                <Text variant="headlineMedium" style={[styles.statNumber, { color: theme.colors.primary }]}>
                   {stats.placesCount}
                 </Text>
                 <Text variant="bodySmall" style={styles.statLabel}>
-                  Мест
+                  {t('home.places')}
                 </Text>
               </View>
               <View style={styles.statDivider} />
               <View style={styles.statItem}>
-                <Text variant="headlineMedium" style={styles.statNumber}>
+                <Text variant="headlineMedium" style={[styles.statNumber, { color: theme.colors.primary }]}>
                   {stats.tripsCount}
                 </Text>
                 <Text variant="bodySmall" style={styles.statLabel}>
-                  Поездок
+                  {t('home.trips')}
                 </Text>
               </View>
             </View>
@@ -108,13 +111,13 @@ export default function HomeScreen() {
                 <Divider style={styles.divider} />
                 <View style={styles.currentTripInfo}>
                   <Text variant="bodyMedium" style={styles.currentTripLabel}>
-                    Текущая поездка:
+                    {t('home.currentTrip')}:
                   </Text>
                   <Text variant="titleSmall" style={styles.currentTripTitle}>
                     {stats.currentTrip.title}
                   </Text>
                   <Text variant="bodySmall" style={styles.currentTripProgress}>
-                    Посещено: {stats.currentTrip.visitedCount} из {stats.currentTrip.placesCount}
+                    {t('trips.visitedCount')}: {stats.currentTrip.visitedCount} {t('trips.of')} {stats.currentTrip.placesCount}
                   </Text>
                 </View>
               </>
@@ -126,7 +129,7 @@ export default function HomeScreen() {
         <Card style={styles.card}>
           <Card.Content>
             <Text variant="titleMedium" style={styles.sectionTitle}>
-              Навигация
+              {t('home.navigation')}
             </Text>
             <View style={styles.buttonsContainer}>
               <Button
@@ -136,7 +139,7 @@ export default function HomeScreen() {
                 icon="map-marker"
                 contentStyle={styles.buttonContent}
               >
-                Места
+                {t('home.placesButton')}
               </Button>
 
               <Button
@@ -146,7 +149,7 @@ export default function HomeScreen() {
                 icon="airplane"
                 contentStyle={styles.buttonContent}
               >
-                Поездки
+                {t('home.tripsButton')}
               </Button>
 
               <Button
@@ -155,9 +158,9 @@ export default function HomeScreen() {
                 style={styles.button}
                 icon="arrow-right-circle"
                 contentStyle={styles.buttonContent}
-                buttonColor={stats.currentTrip ? '#6200ee' : '#999'}
+                buttonColor={stats.currentTrip ? theme.colors.primary : '#999'}
               >
-                Следующее место
+                {t('home.nextPlace')}
               </Button>
 
               <Button
@@ -167,7 +170,7 @@ export default function HomeScreen() {
                 icon="cog"
                 contentStyle={styles.buttonContent}
               >
-                Настройки
+                {t('home.settingsButton')}
               </Button>
             </View>
           </Card.Content>
@@ -222,7 +225,6 @@ const styles = StyleSheet.create({
   },
   welcomeCard: {
     marginBottom: 20,
-    backgroundColor: '#6200ee',
   },
   title: {
     textAlign: 'center',
@@ -250,7 +252,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   statNumber: {
-    color: '#6200ee',
     fontWeight: 'bold',
   },
   statLabel: {

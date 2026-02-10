@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
 import { Stack } from 'expo-router';
-import { PaperProvider } from 'react-native-paper';
 import { databaseService } from '../services/database';
 import { photoService } from '../services/photoService';
+import { ThemeProvider } from '../contexts/ThemeContext';
+import '../i18n'; // Инициализация i18n
 
 export default function RootLayout() {
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <PaperProvider>
+    <ThemeProvider>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="places" options={{ headerShown: false }} />
@@ -42,6 +43,6 @@ export default function RootLayout() {
         <Stack.Screen name="next-place" options={{ headerShown: false }} />
         <Stack.Screen name="settings" options={{ headerShown: false }} />
       </Stack>
-    </PaperProvider>
+    </ThemeProvider>
   );
 }

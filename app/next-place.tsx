@@ -8,8 +8,10 @@ import {
   Chip,
   ProgressBar,
   IconButton,
+  useTheme,
 } from 'react-native-paper';
 import { useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { tripService } from '../services/tripService';
 import { tripPlaceService } from '../services/tripPlaceService';
 import { Trip, TripPlace, Place } from '../types';
@@ -20,6 +22,8 @@ import ScreenWrapper from '../components/ScreenWrapper';
 
 export default function NextPlaceScreen() {
   const router = useRouter();
+  const { t } = useTranslation();
+  const theme = useTheme();
   const [currentTrip, setCurrentTrip] = useState<Trip | null>(null);
   const [nextPlace, setNextPlace] = useState<(TripPlace & { place: Place }) | null>(null);
   const [allTripPlaces, setAllTripPlaces] = useState<(TripPlace & { place: Place })[]>([]);
@@ -177,10 +181,10 @@ export default function NextPlaceScreen() {
         <View style={styles.container}>
           <Appbar.Header>
             <Appbar.BackAction onPress={() => router.back()} />
-            <Appbar.Content title="Следующее место" />
+            <Appbar.Content title={t('nextPlace.title')} />
           </Appbar.Header>
           <View style={styles.centerContent}>
-            <Text variant="bodyLarge">Загрузка...</Text>
+            <Text variant="bodyLarge">{t('common.loading')}</Text>
           </View>
         </View>
       </ScreenWrapper>
@@ -194,7 +198,7 @@ export default function NextPlaceScreen() {
         <View style={styles.container}>
           <Appbar.Header>
             <Appbar.BackAction onPress={() => router.back()} />
-            <Appbar.Content title="Следующее место" />
+            <Appbar.Content title={t('nextPlace.title')} />
           </Appbar.Header>
           <ScrollView
             style={styles.scrollView}
@@ -206,17 +210,17 @@ export default function NextPlaceScreen() {
             <Card style={styles.card}>
               <Card.Content>
                 <Text variant="headlineSmall" style={styles.emptyTitle}>
-                  Нет активной поездки
+                  {t('nextPlace.noCurrentTrip')}
                 </Text>
                 <Text variant="bodyLarge" style={styles.emptyText}>
-                  Создайте поездку и отметьте её как текущую, чтобы увидеть следующее место.
+                  {t('nextPlace.noCurrentTripDescription')}
                 </Text>
                 <Button
                   mode="contained"
                   onPress={() => router.push('/trips/new')}
                   style={styles.actionButton}
                 >
-                  Создать поездку
+                  {t('trips.newTrip')}
                 </Button>
               </Card.Content>
             </Card>
@@ -280,7 +284,7 @@ export default function NextPlaceScreen() {
       <View style={styles.container}>
         <Appbar.Header>
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title="Следующее место" />
+        <Appbar.Content title={t('nextPlace.title')} />
         <Appbar.Action icon="refresh" onPress={onRefresh} />
       </Appbar.Header>
 
@@ -299,17 +303,17 @@ export default function NextPlaceScreen() {
                 {currentTrip.title}
               </Text>
               <Chip icon="airplane" compact>
-                Текущая
+                {t('nextPlace.current')}
               </Chip>
             </View>
             {totalCount > 0 && (
               <View style={styles.progressContainer}>
                 <Text variant="bodySmall" style={styles.progressLabel}>
-                  Место {nextPlace.order} из {totalCount}
+                  {t('nextPlace.place')} {nextPlace.order} {t('nextPlace.of')} {totalCount}
                 </Text>
-                <ProgressBar progress={progress} color="#6200ee" style={styles.progressBar} />
+                <ProgressBar progress={progress} color={theme.colors.primary} style={styles.progressBar} />
                 <Text variant="bodySmall" style={styles.progressText}>
-                  {visitedCount} из {totalCount} посещено
+                  {visitedCount} {t('nextPlace.of')} {totalCount} {t('nextPlace.visitedCount')}
                 </Text>
               </View>
             )}
@@ -320,7 +324,7 @@ export default function NextPlaceScreen() {
         <Card style={styles.card}>
           <Card.Content>
             <View style={styles.placeHeader}>
-              <View style={styles.placeNumber}>
+              <View style={[styles.placeNumber, { backgroundColor: theme.colors.primary }]}>
                 <Text variant="headlineMedium" style={styles.placeNumberText}>
                   {nextPlace.order}
                 </Text>
@@ -329,7 +333,7 @@ export default function NextPlaceScreen() {
                 <Text variant="headlineSmall" style={styles.placeName}>
                   {nextPlace.place.name}
                 </Text>
-                <Text variant="bodyMedium" style={styles.nextLabel}>
+                <Text variant="bodyMedium" style={[styles.nextLabel, { color: theme.colors.primary }]}>
                   Следующее место
                 </Text>
               </View>
@@ -344,14 +348,14 @@ export default function NextPlaceScreen() {
             {nextPlace.place.dd && (
               <View style={styles.coordinatesContainer}>
                 <Text variant="bodyMedium" style={styles.coordinatesLabel}>
-                  📍 Координаты:
+                  📍 {t('places.coordinates')}:
                 </Text>
                 <Text variant="bodySmall" style={styles.coordinates}>
                   {nextPlace.place.dd}
                 </Text>
                 {distance !== null && (
-                  <Text variant="bodyMedium" style={styles.distance}>
-                    📏 Расстояние: {distance.toFixed(1)} км
+                  <Text variant="bodyMedium" style={[styles.distance, { color: theme.colors.primary }]}>
+                    📏 {t('nextPlace.distance')}: {distance.toFixed(1)} {t('nextPlace.km')}
                   </Text>
                 )}
               </View>
@@ -467,7 +471,6 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#6200ee',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
@@ -483,7 +486,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   nextLabel: {
-    color: '#6200ee',
     fontWeight: '600',
   },
   description: {
@@ -509,7 +511,6 @@ const styles = StyleSheet.create({
   },
   distance: {
     marginTop: 8,
-    color: '#6200ee',
     fontWeight: '600',
   },
   chip: {
