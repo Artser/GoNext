@@ -18,7 +18,8 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.artser.gonext"
     },
     "scheme": "gonext",
     "plugins": [
@@ -26,7 +27,16 @@
       "expo-asset",
       "expo-font",
       "expo-sqlite",
-      "expo-secure-store"
-    ]
+      "expo-secure-store",
+      ["expo-build-properties", {"android": {"kotlinVersion": "1.9.25"}}]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "2e1d0717-a3c6-4d09-bde7-a12a2f092a02"
+      }
+    }
   }
 }
